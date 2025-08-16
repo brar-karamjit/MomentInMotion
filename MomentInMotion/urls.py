@@ -1,6 +1,7 @@
-from django.urls import path
-from . import views
+from django.contrib import admin
+from django.urls import path, include
 
 urlpatterns = [
-    path('', views.suggest_activity, name='suggest_activity'),
+    path('admin/', admin.site.urls),
+    path('', include('core.urls')),  # point root URL to core app
 ]
