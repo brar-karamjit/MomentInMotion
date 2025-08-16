@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MomentInMotion</title>
+</head>
+<body>
+    <h1>MomentInMotion (MoMo)</h1>
+
+    <form method="POST">
+        {% csrf_token %}
+        Name: <input type="text" name="name" required><br>
+        Interests (comma separated): <input type="text" name="interests"><br>
+        Drives: <input type="checkbox" name="drives"><br>
+        <input type="hidden" name="lat" id="lat">
+        <input type="hidden" name="lon" id="lon">
+        <button type="submit">Get Suggestion</button>
+    </form>
+
+    {% if weather %}
+        <p>Current temperature: {{ weather.temperature }}°C</p>
+    {% endif %}
+
+    {% if suggestion %}
+        <h2>Suggestion: {{ suggestion }}</h2>
+    {% endif %}
+
+    <script>
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(position => {
+                document.getElementById('lat').value = position.coords.latitude;
+                document.getElementById('lon').value = position.coords.longitude;
+            });
+        }
+    </script>
+</body>
+</html>

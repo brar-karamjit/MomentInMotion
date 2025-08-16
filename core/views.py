@@ -1,40 +1,35 @@
+import requests
 from django.shortcuts import render
 from .models import UserMetadata
-import requests
 
-def get_weather(city):
-    # Replace with your weather API key
-    api_key = "YOUR_API_KEY"
-    url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&units=metric&appid={api_key}"
-    response = requests.get(url)
-    data = response.json()
-    if data.get("main"):
-        temp = data["main"]["temp"]
-        condition = data["weather"][0]["description"]
-        return f"{condition}, {temp}°C"
-    return "Weather unavailable"
+def home(request):
+    suggestion = None
+    weather = None
 
-def suggest_activity(request):
-    user = request.user
-    profile = UserMetadata.objects.get(user=user)
-    
-    # Fetch city (for MVP, you can hardcode or ask user in profile)
-    city = profile.name  # replace with profile.location if added
-    
-    weather = get_weather(city)
-    
-    # Generate prompt for AI
-    prompt = f"""
-    User: {profile.name}
-    Interests: {profile.interests}
-    Drives: {'Yes' if profile.drives else 'No'}
-    Location: {city}
-    Weather: {weather}
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        interests = request.POST.get('interests')
+        drives = request.POST.get('drives') == 'on'
+        lat = request.POST.get('lat')
+        lon = request.POST.get('lon')
 
-    Suggest one fun activity for today.
-    """
-    
-    # Call AI model (pseudo-code)
-    ai_response = call_chat_model(prompt)  # implement this with OpenAI or your chosen API
+        # Save user metadata (optional)
+        user, created = UserMetadata.objects.get_or_create(
+            name=name,
+            defaults={'interests': interests, 'drives': drives}
+        )
 
-    return render(request, "core/suggest.html", {"activity": ai_response})
+        # Fetch weather from Open-Meteo
+        weather_resp = requests.get(
+            f"https://api.open-meteo.com/v1/forecast?latitude={lat}&longitude={lon}&current_weather=true"
+        )
+        if weather_resp.status_code == 200:
+            weather_data = weather_resp.json()
+            weather = weather_data.get('current_weather', {})
+
+        # Simple AI-based suggestion (replace with real AI call)
+        if weather:
+            temp = weather.get('temperature', 20)
+            suggestion = "Go for a walk" if temp > 15 else "Watch a movie"
+
+    return render(request, 'core/home.html', {'suggestion': suggestion, 'weather': weather})
