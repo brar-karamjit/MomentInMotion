@@ -26,10 +26,7 @@
     </form>
 
     {% if suggestion_data %}
-        <h2>Prompt sent to Gemini:</h2>
-        <pre>{{ suggestion_data.prompt }}</pre>
-
-        <h2>Suggestion received:</h2>
+        <h2>Suggestion activity:</h2>
         <div class="suggestion">{{ suggestion_data.response|linebreaks }}</div>
     {% endif %}
 

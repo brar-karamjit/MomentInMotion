@@ -39,3 +39,14 @@ class SignUpForm(UserCreationForm):
             )
 
         return user
+    
+
+class UserProfileForm(forms.ModelForm):
+    class Meta:
+        model = UserMetadata
+        fields = ['bio', 'interests', 'drives']  # add any other fields you want editable
+        widgets = {
+            'bio': forms.Textarea(attrs={'rows': 3, 'cols': 40}),
+            'interests': forms.TextInput(attrs={'size': 50}),
+            'drives': forms.CheckboxInput()
+        }

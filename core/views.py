@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 import requests
 import json
 import os
-from .forms import SignUpForm
+from .forms import *
 from django.contrib.auth.models import User
 from django.contrib.auth import login
 from core.models import UserMetadata     
@@ -40,9 +40,9 @@ def get_suggestion(user, metadata, weather, latitude, longitude):
     Latitude: {latitude}
     Longitude: {longitude}
     Weather: {weather['temperature']}°C, {weather.get('weathercode', 'unknown')}
-
-    Important: Keep your answer one line only. 
     Calculate the rough city name from given latitute longitude.
+    Important: Keep your answer very brief. For example, "Visit the local museum" or "Go for a walk in the park (park name)". 
+    You can also suggest acitivies outside user interest, take various factors into account like weather, time of day, events happening in city.
     Suggest activities this user can do right now.
     """
 
@@ -62,10 +62,10 @@ def get_suggestion(user, metadata, weather, latitude, longitude):
             if parts:
                 suggestion_text = parts[0].get("text", "").strip()
 
-        return {"prompt": prompt_text, "response": suggestion_text or "No suggestion available."}
+        return {"response": suggestion_text or "No suggestion available."}
 
     except Exception as e:
-        return {"prompt": prompt_text, "response": f"Error generating suggestion: {e}"}
+        return {"response": f"Error generating suggestion: {e}"}
 
 
 @login_required
@@ -93,3 +93,22 @@ def home(request):
         "user": user,
         "suggestion_data": suggestion_data,
     })
+
+
+@login_required
+def profile(request):
+    user = request.user
+    try:
+        metadata = UserMetadata.objects.get(user=user)
+    except UserMetadata.DoesNotExist:
+        metadata = UserMetadata(user=user)  # create blank metadata if missing
+
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, instance=metadata)
+        if form.is_valid():
+            form.save()
+            return redirect('profile')  # reload page after saving
+    else:
+        form = UserProfileForm(instance=metadata)
+
+    return render(request, 'core/profile.html', {'form': form, 'user': user})
