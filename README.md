@@ -2,21 +2,7 @@
 
 MomentInMotion is a personal activity suggestion web app that recommends things to do based on a user’s location, weather, and interests. The app uses real-time weather data and generative AI to provide personalized suggestions.
 
-## Table of Contents
 
-* [Features](https://www.google.com/search?q=%23features)
-
-* [Technologies Used](https://www.google.com/search?q=%23technologies-used)
-
-* [Setup Instructions](https://www.google.com/search?q=%23setup-instructions)
-
-* [Usage](https://www.google.com/search?q=%23usage)
-
-* [Environment Variables](https://www.google.com/search?q=%23environment-variables)
-
-* [Security](https://www.google.com/search?q=%23security)
-
-* [License](https://www.google.com/search?q=%23license)
 
 ## Features
 
