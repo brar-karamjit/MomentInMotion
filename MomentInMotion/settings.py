@@ -21,6 +21,9 @@ WEATHER_API_KEY = os.getenv("OPENWEATHER_API_KEY")
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+LOGIN_URL = '/login/'            # redirect here if user is not logged in
+LOGIN_REDIRECT_URL = '/'         # after login, go to home page
+LOGOUT_REDIRECT_URL = '/login/'  # after logout
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/

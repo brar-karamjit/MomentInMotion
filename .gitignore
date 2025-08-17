@@ -1,1 +1,26 @@
-OPENWEATHER_API_KEY=your_long_api_key_here
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment files
+.env
+*.env
+
+# Django stuff:
+*.log
+*.pot
+*.pyc
+db.sqlite3
+/media
+/staticfiles
+
+# VS Code
+.vscode/
+
+# MacOS
+.DS_Store
+
+# Other
+*.swp
+*.swo
