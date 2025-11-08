@@ -44,40 +44,38 @@
         </div>
     </article>
 
-    <div class="insights-column">
-        <article class="card moment-card">
-            <div class="card-header">
-                <div>
-                    <h2 class="card-title">Ready when you are</h2>
-                    <p class="card-subtitle">Once your location is set, tap below to unlock a fresh idea.</p>
-                </div>
-            </div>
-            <form method="post">
-                {% csrf_token %}
-                <input type="hidden" name="lat" id="lat">
-                <input type="hidden" name="lon" id="lon">
-                <input type="hidden" name="temperature" id="temperature_input">
-                <input type="hidden" name="weathercode" id="weather_text_input">
+    <article class="card insights-card">
+        <div class="insights-copy">
+            <h2>Spark something now</h2>
+            <p>Press the button to see your next move fill in below.</p>
+        </div>
 
-                <button type="submit" name="action" value="get_suggestion">Get personalized idea</button>
-            </form>
-        </article>
+        <form method="post" class="insights-form">
+            {% csrf_token %}
+            <input type="hidden" name="lat" id="lat">
+            <input type="hidden" name="lon" id="lon">
+            <input type="hidden" name="temperature" id="temperature_input">
+            <input type="hidden" name="weathercode" id="weather_text_input">
 
-        <article class="card suggestion-card">
-            <h3>Your personalized idea</h3>
+            <button type="submit" name="action" value="get_suggestion" class="insights-button">
+                Show me an idea
+            </button>
+        </form>
+
+        <div class="insights-reveal {% if not suggestion_data %}is-empty{% endif %}">
             {% if suggestion_data %}
                 <div class="suggestion-body fade-in">{{ suggestion_data.response|linebreaksbr }}</div>
             {% else %}
-                <div class="empty-state">
-                    <span aria-hidden="true">✨</span>
+                <div class="reveal-placeholder">
+                    <span class="reveal-icon" aria-hidden="true">✨</span>
                     <div>
-                        <strong>No suggestion yet.</strong>
-                        <div>Hit the button above once we have your weather to generate something just for you.</div>
+                        <strong>Nothing here yet.</strong>
+                        <div>Hit “Show me an idea” and watch this space fill in.</div>
                     </div>
                 </div>
             {% endif %}
-        </article>
-    </div>
+        </div>
+    </article>
 </section>
 {% endblock %}
 

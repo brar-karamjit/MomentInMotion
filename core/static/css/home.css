@@ -58,15 +58,9 @@
 
 .home-grid {
     display: grid;
-    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
     gap: 28px;
     align-items: stretch;
-}
-
-.insights-column {
-    display: grid;
-    gap: 24px;
-    align-content: start;
 }
 
 .weather-card {
@@ -160,31 +154,78 @@
     color: var(--text-primary);
 }
 
-.moment-card {
+
+.insights-card {
     display: flex;
     flex-direction: column;
     gap: 24px;
 }
 
-.moment-card form {
+.insights-copy {
     display: grid;
-    gap: 18px;
+    gap: 8px;
 }
 
-.moment-card button {
-    justify-self: flex-start;
-    padding-inline: 28px;
-}
-
-.suggestion-card {
-    margin-top: 12px;
-    display: grid;
-    gap: 20px;
-}
-
-.suggestion-card h3 {
+.insights-copy h2 {
     margin: 0;
-    font-size: 1.3rem;
+    font-size: 1.4rem;
+}
+
+.insights-copy p {
+    margin: 0;
+    color: var(--text-secondary);
+}
+
+.insights-form {
+    display: flex;
+    align-self: flex-start;
+}
+
+.insights-form button {
+    white-space: nowrap;
+}
+
+.insights-button {
+    padding-inline: 26px;
+}
+
+.insights-reveal {
+    position: relative;
+    border-radius: var(--radius-medium);
+    border: 1px dashed rgba(91, 108, 255, 0.45);
+    background: rgba(91, 108, 255, 0.08);
+    padding: 22px 24px;
+    transition: border-style 0.25s var(--transition-default),
+        border-color 0.25s var(--transition-default),
+        background 0.25s var(--transition-default);
+    min-height: 140px;
+    display: flex;
+    align-items: stretch;
+}
+
+.insights-reveal:not(.is-empty) {
+    border-style: solid;
+    border-color: rgba(91, 108, 255, 0.4);
+    background: rgba(91, 108, 255, 0.12);
+}
+
+.reveal-placeholder {
+    display: flex;
+    gap: 18px;
+    align-items: center;
+    color: var(--text-secondary);
+}
+
+.reveal-icon {
+    display: inline-flex;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    background: rgba(91, 108, 255, 0.18);
+    color: var(--accent);
+    font-size: 1.2rem;
 }
 
 .suggestion-body {
@@ -198,25 +239,6 @@
 
 .suggestion-body strong {
     color: var(--accent);
-}
-
-.empty-state {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    color: var(--text-secondary);
-}
-
-.empty-state span {
-    display: inline-flex;
-    width: 42px;
-    height: 42px;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    background: rgba(91, 108, 255, 0.14);
-    color: var(--accent);
-    font-size: 1.2rem;
 }
 
 .loading {
@@ -267,14 +289,6 @@
 @media (max-width: 960px) {
     .home-grid {
         grid-template-columns: 1fr;
-    }
-
-    .insights-column {
-        grid-template-columns: 1fr;
-    }
-
-    .suggestion-card {
-        margin-top: 0;
     }
 }
 
