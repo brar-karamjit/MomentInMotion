@@ -14,9 +14,9 @@
         <span class="hero-tag">⚡ Real-time</span>
     </div>
     {% with user.first_name|default:"Explorer" as first_name %}
-    <h1>Hello, {{ first_name }}. Ready to make today memorable?</h1>
+    <h1>Hello, {{ first_name }}.</h1>
     {% endwith %}
-    <p>MomentInMotion pairs live weather with your interests to spark quick, uplifting ideas you can act on in the next few minutes.</p>
+    <p>MomentInMotion turns today's weather into bite-sized inspiration you can act on right away.</p>
 </section>
 
 <section class="home-grid">
@@ -44,39 +44,41 @@
         </div>
     </article>
 
-    <article class="card moment-card">
-        <div class="card-header">
-            <div>
-                <h2 class="card-title">Capture your current vibe</h2>
-                <p class="card-subtitle">Tap the button to pull a fresh, weather-aware idea just for you.</p>
+    <div class="insights-column">
+        <article class="card moment-card">
+            <div class="card-header">
+                <div>
+                    <h2 class="card-title">Ready when you are</h2>
+                    <p class="card-subtitle">Once your location is set, tap below to unlock a fresh idea.</p>
+                </div>
             </div>
-        </div>
-        <form method="post">
-            {% csrf_token %}
-            <input type="hidden" name="lat" id="lat">
-            <input type="hidden" name="lon" id="lon">
-            <input type="hidden" name="temperature" id="temperature_input">
-            <input type="hidden" name="weathercode" id="weather_text_input">
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="lat" id="lat">
+                <input type="hidden" name="lon" id="lon">
+                <input type="hidden" name="temperature" id="temperature_input">
+                <input type="hidden" name="weathercode" id="weather_text_input">
 
-            <button type="submit" name="action" value="get_suggestion">Save moment &amp; get idea</button>
-        </form>
-    </article>
+                <button type="submit" name="action" value="get_suggestion">Get personalized idea</button>
+            </form>
+        </article>
+
+        <article class="card suggestion-card">
+            <h3>Your personalized idea</h3>
+            {% if suggestion_data %}
+                <div class="suggestion-body fade-in">{{ suggestion_data.response|linebreaksbr }}</div>
+            {% else %}
+                <div class="empty-state">
+                    <span aria-hidden="true">✨</span>
+                    <div>
+                        <strong>No suggestion yet.</strong>
+                        <div>Hit the button above once we have your weather to generate something just for you.</div>
+                    </div>
+                </div>
+            {% endif %}
+        </article>
+    </div>
 </section>
-
-<article class="card suggestion-card">
-    <h3>Your personalized idea</h3>
-    {% if suggestion_data %}
-        <div class="suggestion-body fade-in">{{ suggestion_data.response|linebreaksbr }}</div>
-    {% else %}
-        <div class="empty-state">
-            <span aria-hidden="true">✨</span>
-            <div>
-                <strong>No suggestion yet.</strong>
-                <div>Press the button above once your location has been detected to generate a tailored idea.</div>
-            </div>
-        </div>
-    {% endif %}
-</article>
 {% endblock %}
 
 {% block extra_scripts %}

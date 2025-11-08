@@ -102,7 +102,7 @@ def home(request):
     except UserMetadata.DoesNotExist:
         metadata = None
 
-    suggestion_data = None
+    suggestion_data = request.session.pop("last_suggestion", None)
     city = "N/A"
 
     if request.method == "POST" and request.POST.get("action") == "get_suggestion":
@@ -114,6 +114,8 @@ def home(request):
         weather = {"temperature": temperature, "weathercode": weathercode}
 
         suggestion_data = get_suggestion(user, metadata, weather, lat, lon)
+        request.session["last_suggestion"] = suggestion_data
+        return redirect("home")
 
     return render(request, "core/home.html", {
         "user": user,
