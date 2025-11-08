@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 import requests
 import json
 import os
+import logging
 from .forms import *
 from django.contrib.auth.models import User
 from django.contrib.auth import login
@@ -12,6 +13,7 @@ from core.models import UserMetadata
 
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")  # stored in environment variable
+logger = logging.getLogger(__name__)
 
 
 def signup(request):
@@ -27,9 +29,9 @@ def signup(request):
 
 
 def get_suggestion(user, metadata, weather, latitude, longitude):
-    user_name = f"{user.first_name} {user.last_name}" or "none"
-    interests = metadata.interests or "no specific interest"
-    drives = metadata.drives
+    user_name = f"{user.first_name} {user.last_name}".strip() or user.username or "Explorer"
+    interests = getattr(metadata, "interests", None) or "no specific interest"
+    drives = getattr(metadata, "drives", None) or "unspecified"
 
     prompt_text = f"""
     User: {user_name}
@@ -49,8 +51,33 @@ def get_suggestion(user, metadata, weather, latitude, longitude):
     data = {"contents": [{"parts": [{"text": prompt_text}]}]}
 
     try:
-        response = requests.post(url, headers=headers, json=data)
-        response.raise_for_status()
+        response = requests.post(url, headers=headers, json=data, timeout=12)
+    except requests.RequestException as exc:
+        logger.warning("Suggestion service unreachable", exc_info=exc)
+        return {"response": "I couldn't reach our ideas service just now. Try again in a moment."}
+
+    if response.status_code == 429:
+        retry_after = response.headers.get("Retry-After")
+        if retry_after:
+            message = "We're a bit busy. Give it about {} seconds and try again.".format(retry_after)
+        else:
+            message = "We're experiencing a rush of requests right now. Please try again shortly."
+        logger.info("Suggestion service rate limited the request (user=%s)", user.username)
+        return {"response": message}
+
+    if response.status_code >= 400:
+        try:
+            error_payload = response.json()
+            api_message = error_payload.get("error", {}).get("message")
+        except ValueError:
+            api_message = None
+        logger.warning(
+            "Suggestion service returned error %s for user=%s", response.status_code, user.username
+        )
+        friendly_message = api_message or "Something went wrong fetching a suggestion. Please try again soon."
+        return {"response": friendly_message}
+
+    try:
         result = response.json()
 
         candidates = result.get("candidates", [])
@@ -62,8 +89,9 @@ def get_suggestion(user, metadata, weather, latitude, longitude):
 
         return {"response": suggestion_text or "No suggestion available."}
 
-    except Exception as e:
-        return {"response": f"Error generating suggestion: {e}"}
+    except (ValueError, KeyError) as exc:
+        logger.error("Unexpected response from suggestion service", exc_info=exc)
+        return {"response": "We received an unexpected response. Please try again soon."}
 
 
 @login_required

@@ -33,7 +33,6 @@ const locationLabel = document.getElementById("location-label");
 const windSpeedEl = document.getElementById("wind-speed");
 const windDirectionEl = document.getElementById("wind-direction");
 const lastUpdatedEl = document.getElementById("last-updated");
-const weatherCodeEl = document.getElementById("weather-code");
 
 function showLoading() {
     if (tempElement) {
@@ -50,7 +49,7 @@ function showError(message) {
     if (locationLabel) {
         locationLabel.textContent = "Location unavailable";
     }
-    [windSpeedEl, windDirectionEl, lastUpdatedEl, weatherCodeEl].forEach((el) => {
+    [windSpeedEl, windDirectionEl, lastUpdatedEl].forEach((el) => {
         if (el) el.textContent = "--";
     });
 }
@@ -115,10 +114,6 @@ function renderWeather(current) {
 
     if (lastUpdatedEl) {
         lastUpdatedEl.textContent = formatUpdatedTime(current.time);
-    }
-
-    if (weatherCodeEl) {
-        weatherCodeEl.textContent = `${code}`;
     }
 
     const tempInput = document.getElementById("temperature_input");
