@@ -9,6 +9,7 @@
 
 A personal activity suggestion web application that recommends activities based on your location, current weather, and personal interests. Powered by real-time weather data and generative AI for personalized suggestions.
 
+
 ## Features
 
 - **User Accounts**: Secure sign-up and login to save preferences
