@@ -56,6 +56,29 @@ A personal activity suggestion web application that recommends activities based 
 
    Visit `http://127.0.0.1:8000` in your browser.
 
+## Docker Setup
+
+Alternatively, you can run the application using Docker:
+
+1. **Ensure Docker is installed** on your system.
+
+2. **Build the Docker image**:
+   ```bash
+   docker build -t momentinmotion .
+   ```
+
+3. **Run the Docker container**:
+   ```bash
+   docker run -p 8000:8000 --env-file .env momentinmotion
+   ```
+
+   Or, if you prefer to pass environment variables directly:
+   ```bash
+   docker run -p 8000:8000 -e OPENWEATHER_API_KEY=your_key -e GEMINI_API_KEY=your_key momentinmotion
+   ```
+
+   Visit `http://127.0.0.1:8000` in your browser.
+
 ## Usage
 
 1. Register a new account or log in with existing credentials.
@@ -88,6 +111,8 @@ MomentInMotion/
 ├── MomentInMotion/          # Django project settings
 │   ├── settings.py          # Project configuration
 │   └── urls.py              # Main URL configuration
+├── Dockerfile               # Docker configuration
+├── .dockerignore            # Docker ignore file
 ├── db.sqlite3               # SQLite database
 ├── manage.py                # Django management script
 └── requirements.txt         # Python dependencies
