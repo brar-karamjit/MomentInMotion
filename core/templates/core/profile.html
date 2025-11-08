@@ -1,21 +1,76 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>{{ user.first_name }}'s Profile</title>
-    <style>
-        body { font-family: Arial, sans-serif; max-width: 700px; margin: 20px auto; }
-        label { display: block; margin-top: 10px; font-weight: bold; }
-        input, textarea { width: 100%; padding: 5px; margin-top: 3px; }
-        button { margin-top: 10px; padding: 8px 16px; background-color: #3498db; color: white; border: none; border-radius: 5px; cursor: pointer; }
-        button:hover { background-color: #2980b9; }
-    </style>
-</head>
-<body>
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ user.first_name }}'s Profile{% endblock %}
+{% block content %}
+<div class="container">
     <h1>Edit Profile: {{ user.first_name }}</h1>
-    <form method="POST">
+
+    <form method="POST" style="display:flex; flex-direction:column; gap:15px;">
         {% csrf_token %}
-        {{ form.as_p }}
+
+        <!-- Read-only fields -->
+        <div class="form-field">
+            <label>First Name</label>
+            <input type="text" value="{{ user.first_name }}" readonly>
+        </div>
+
+        <div class="form-field">
+            <label>Last Name</label>
+            <input type="text" value="{{ user.last_name }}" readonly>
+        </div>
+
+        <div class="form-field">
+            <label>Username</label>
+            <input type="text" value="{{ user.username }}" readonly>
+        </div>
+
+        <!-- Editable fields -->
+        <div class="form-field">
+            <label for="id_bio">Bio</label>
+            <br>
+            <small class="help-text">Tell us something interesting about yourself.</small>
+            {{ form.bio }}
+        </div>
+
+        <div class="form-field">
+            <label for="id_interests">Interests</label>
+            <br>
+            <small class="help-text">What are your hobbies or interests?</small>
+            {{ form.interests }}
+        </div>
+
+        <div class="form-field">
+            <label for="id_drives">Drives</label>
+            <br>
+            <small class="help-text">Do you drive?</small>
+            {{ form.drives }}
+        </div>
+
         <button type="submit">Save Changes</button>
     </form>
-</body>
-</html>
+</div>
+{% endblock %}
+
+<style>
+.form-field label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 2px;
+}
+
+.form-field .help-text {
+    font-size: 0.85em;
+    color: #555;
+    margin-bottom: 5px;
+    display: block;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+</style>

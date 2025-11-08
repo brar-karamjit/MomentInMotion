@@ -1,0 +1,31 @@
+const weatherEmoji = {
+    0: "☀️ Clear", 1: "🌤️ Mainly clear", 2: "⛅ Partly cloudy", 3: "☁️ Cloudy",
+    45: "🌫️ Fog", 48: "🌫️ Depositing rime fog", 51: "🌦️ Light drizzle",
+    53: "🌦️ Moderate drizzle", 55: "🌦️ Dense drizzle", 61: "🌧️ Slight rain",
+    63: "🌧️ Moderate rain", 65: "🌧️ Heavy rain", 71: "❄️ Slight snow",
+    73: "❄️ Moderate snow", 75: "❄️ Heavy snow", 80: "🌦️ Rain showers",
+    81: "🌦️ Moderate rain showers", 82: "🌧️ Violent rain showers",
+    95: "⛈️ Thunderstorm", 96: "⛈️ Thunderstorm with slight hail", 99: "⛈️ Thunderstorm with heavy hail"
+};
+
+if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(position => {
+        const lat = position.coords.latitude;
+        const lon = position.coords.longitude;
+        document.getElementById('lat').value = lat;
+        document.getElementById('lon').value = lon;
+
+        fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`)
+        .then(resp => resp.json())
+        .then(data => {
+            if (data.current_weather) {
+                const temp = data.current_weather.temperature;
+                const code = data.current_weather.weathercode;
+                const weatherText = weatherEmoji[code] || `Code ${code}`;
+                document.getElementById('temperature').innerText = `${temp}°C, ${weatherText}`;
+                document.getElementById('temperature_input').value = temp;
+                document.getElementById('weather_text_input').value = weatherText;
+            }
+        }).catch(err => console.error("Weather fetch error:", err));
+    });
+}

@@ -1,112 +1,126 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Sign Up - MomentInMotion</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f0f4f8;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            padding-top: 50px; /* top margin for form */
-        }
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Sign Up - MomentInMotion{% endblock %}
 
-        .signup-container {
-            background: #fff;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            width: 400px;
-        }
-
-        h2 {
-            text-align: center;
-            margin-bottom: 30px;
-            color: #333;
-        }
-
-        form label {
-            display: block;
-            margin-top: 15px;
-            font-weight: bold;
-            color: #555;
-        }
-
-        form input, form select, form textarea {
-            width: 100%;
-            padding: 10px;
-            margin-top: 5px;
-            border-radius: 6px;
-            border: 1px solid #ccc;
-            box-sizing: border-box;
-            font-size: 14px;
-        }
-
-        form textarea {
-            resize: vertical;
-        }
-
-        button {
-            width: 100%;
-            padding: 12px;
-            margin-top: 25px;
-            background: #007bff;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        button:hover {
-            background: #0056b3;
-        }
-
-        .login-link {
-            text-align: center;
-            margin-top: 15px;
-            font-size: 14px;
-        }
-
-        .login-link a {
-            color: #007bff;
-            text-decoration: none;
-        }
-
-        .login-link a:hover {
-            text-decoration: underline;
-        }
-    </style>
-</head>
-<body>
-    <div class="signup-container">
-        <h2>Sign Up</h2>
-        <form method="post">
-            {% csrf_token %}
-
-            <label>Username:</label> {{ form.username }}
-            <label>Email:</label> {{ form.email }}
-            <label>First Name:</label> {{ form.first_name }}
-            <label>Last Name:</label> {{ form.last_name }}
-            <label>Password:</label> {{ form.password1 }}
-            <label>Confirm Password:</label> {{ form.password2 }}
-            <label>Interests:</label> {{ form.interests }}
-            <label>Drives:</label>
-            <select name="drives">
-                <option value="">Select</option>
-                <option value="True">Yes</option>
-                <option value="False">No</option>
-            </select>
-            <label>Bio:</label> {{ form.bio }}
-
-            <button type="submit">Sign Up</button>
-        </form>
-
-        <div class="login-link">
-            Already have an account? <a href="{% url 'login' %}">Login</a>
+{% block content %}
+<div class="form-wrapper">
+    <h2>Sign Up</h2>
+    <form method="post" class="form-column">
+        {% csrf_token %}
+        {% if form.non_field_errors %}
+        <div class="form-errors" role="alert">
+            {{ form.non_field_errors }}
         </div>
+        {% endif %}
+        <label>Username:</label>
+        {{ form.username }}
+        {{ form.username.errors }}
+        <label>Email:</label>
+        {{ form.email }}
+        {{ form.email.errors }}
+        <label>First Name:</label>
+        {{ form.first_name }}
+        {{ form.first_name.errors }}
+        <label>Last Name:</label>
+        {{ form.last_name }}
+        {{ form.last_name.errors }}
+        <label>Password:</label>
+        {{ form.password1 }}
+        {{ form.password1.errors }}
+        <label>Confirm Password:</label>
+        {{ form.password2 }}
+        {{ form.password2.errors }}
+        <label>Interests:</label>
+        {{ form.interests }}
+        {{ form.interests.errors }}
+        <label>Drives:</label>
+        {{ form.drives }}
+        {{ form.drives.errors }}
+        <label>Bio:</label>
+        {{ form.bio }}
+        {{ form.bio.errors }}
+
+        <button type="submit">Sign Up</button>
+    </form>
+    <div class="login-link">
+        Already have an account? <a href="{% url 'login' %}">Login</a>
     </div>
-</body>
-</html>
+</div>
+
+<style>
+.form-wrapper {
+    max-width: 400px;
+    margin: 50px auto;
+    background: #fff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.form-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-errors,
+.form-column .errorlist {
+    margin-top: 10px;
+    color: #b3261e;
+    background: rgba(179, 38, 30, 0.08);
+    border: 1px solid rgba(179, 38, 30, 0.2);
+    border-radius: 6px;
+    padding: 10px 12px;
+    list-style: none;
+}
+
+.form-column .errorlist {
+    margin-bottom: 0;
+}
+
+.form-column label {
+    margin-top: 15px;
+    font-weight: bold;
+}
+
+.form-column input,
+.form-column select,
+.form-column textarea {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.form-column button {
+    margin-top: 25px;
+    padding: 12px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.form-column button:hover {
+    background: #0056b3;
+}
+
+.login-link {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 14px;
+}
+.login-link a {
+    color: #007bff;
+    text-decoration: none;
+}
+.login-link a:hover {
+    text-decoration: underline;
+}
+</style>
+{% endblock %}

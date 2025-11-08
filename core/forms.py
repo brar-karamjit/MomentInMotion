@@ -25,17 +25,22 @@ class SignUpForm(UserCreationForm):
                   "password1", "password2", "interests", "drives", "bio")
 
     def save(self, commit=True):
-        # Save the User object first
-        user = super().save(commit=commit)
+        user = super().save(commit=False)
+        user.email = self.cleaned_data.get("email")
+        user.first_name = self.cleaned_data.get("first_name")
+        user.last_name = self.cleaned_data.get("last_name")
+
+        metadata_defaults = {
+            "interests": self.cleaned_data.get("interests"),
+            "drives": self.cleaned_data.get("drives", False),
+            "bio": self.cleaned_data.get("bio"),
+        }
 
         if commit:
-            # Safely create or update UserMetadata
+            user.save()
             UserMetadata.objects.update_or_create(
                 user=user,
-                defaults={
-                    "interests": self.cleaned_data.get("interests"),
-                    "drives": self.cleaned_data.get("drives", False),
-                }
+                defaults=metadata_defaults,
             )
 
         return user
@@ -48,5 +53,10 @@ class UserProfileForm(forms.ModelForm):
         widgets = {
             'bio': forms.Textarea(attrs={'rows': 3, 'cols': 40}),
             'interests': forms.TextInput(attrs={'size': 50}),
-            'drives': forms.CheckboxInput()
+            'drives': forms.Select(choices=[(True, 'Yes'), (False, 'No')])
+        }
+        help_texts = {
+            'bio': 'Tell us something interesting about yourself.',
+            'interests': 'What are your hobbies or interests?',
+            'drives': 'Do you drive?'
         }

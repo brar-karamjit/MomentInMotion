@@ -10,7 +10,8 @@ from core.models import UserMetadata
 
 
 
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")  # store key in environment variable
+
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")  # stored in environment variable
 
 
 def signup(request):
@@ -18,9 +19,6 @@ def signup(request):
         form = SignUpForm(request.POST)
         if form.is_valid():
             user = form.save()
-            interests = form.cleaned_data["interests"]
-            drives = form.cleaned_data["drives"]
-            UserMetadata.objects.create(user=user, interests=interests, drives=drives)
             login(request, user)
             return redirect("home")
     else:
