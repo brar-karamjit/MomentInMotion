@@ -73,6 +73,7 @@ A personal activity suggestion web application that recommends activities based 
   - Google Gemini AI for activity suggestions
 - **Other**: python-dotenv for environment management
 
+
 ## Project Structure
 
 ```
