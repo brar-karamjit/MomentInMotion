@@ -47,7 +47,7 @@
     <article class="card insights-card">
         <div class="insights-copy">
             <h2>Spark something now</h2>
-            <p>Press the button to see your next move fill in below.</p>
+            <p>Press the button to see your next move.</p>
         </div>
 
         <form method="post" class="insights-form">
@@ -58,7 +58,7 @@
             <input type="hidden" name="weathercode" id="weather_text_input">
 
             <button type="submit" name="action" value="get_suggestion" class="insights-button">
-                Show me an idea
+                Suggest activity
             </button>
         </form>
 
@@ -67,11 +67,8 @@
                 <div class="suggestion-body fade-in">{{ suggestion_data.response|linebreaksbr }}</div>
             {% else %}
                 <div class="reveal-placeholder">
-                    <span class="reveal-icon" aria-hidden="true">✨</span>
-                    <div>
-                        <strong>Nothing here yet.</strong>
-                        <div>Hit “Show me an idea” and watch this space fill in.</div>
-                    </div>
+                    <strong>. . .</strong>
+                    
                 </div>
             {% endif %}
         </div>

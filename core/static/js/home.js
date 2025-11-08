@@ -83,8 +83,22 @@ function formatUpdatedTime(timestamp) {
     }
 }
 
-function updateLocationPill(lat, lon) {
+async function updateLocationPill(lat, lon) {
     if (!locationLabel) return;
+    try {
+        const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=10&addressdetails=1`);
+        const data = await response.json();
+        if (data && data.address) {
+            const city = data.address.city || data.address.town || data.address.village || data.address.hamlet;
+            if (city) {
+                locationLabel.textContent = `Near ${city}`;
+                return;
+            }
+        }
+    } catch (error) {
+        console.warn("Reverse geocoding failed:", error);
+    }
+    // Fallback to coordinates
     const formatted = `${lat.toFixed(2)}°, ${lon.toFixed(2)}°`;
     locationLabel.textContent = `Near ${formatted}`;
 }
@@ -122,7 +136,7 @@ function renderWeather(current) {
     if (weatherTextInput) weatherTextInput.value = description;
 }
 
-function handlePositionSuccess(position) {
+async function handlePositionSuccess(position) {
     const lat = position.coords.latitude;
     const lon = position.coords.longitude;
 
@@ -131,7 +145,7 @@ function handlePositionSuccess(position) {
     if (latInput) latInput.value = lat;
     if (lonInput) lonInput.value = lon;
 
-    updateLocationPill(lat, lon);
+    await updateLocationPill(lat, lon);
 
     fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&timezone=auto`)
         .then((resp) => resp.json())
