@@ -3,20 +3,20 @@
 
 {% block title %}{{ user.first_name }}'s Profile{% endblock %}
 {% block content %}
-<div class="container">
-    <h1>Edit Profile: {{ user.first_name }}</h1>
+<section class="card form-card">
+    <h2>Profile · {{ user.first_name|default:user.username }}</h2>
+    <p class="card-subtitle">Fine-tune your interests so we can send better ideas when the weather aligns.</p>
 
-    <form method="POST" style="display:flex; flex-direction:column; gap:15px;">
+    <form method="post" class="form-grid">
         {% csrf_token %}
 
-        <!-- Read-only fields -->
         <div class="form-field">
-            <label>First Name</label>
+            <label>First name</label>
             <input type="text" value="{{ user.first_name }}" readonly>
         </div>
 
         <div class="form-field">
-            <label>Last Name</label>
+            <label>Last name</label>
             <input type="text" value="{{ user.last_name }}" readonly>
         </div>
 
@@ -25,52 +25,28 @@
             <input type="text" value="{{ user.username }}" readonly>
         </div>
 
-        <!-- Editable fields -->
         <div class="form-field">
             <label for="id_bio">Bio</label>
-            <br>
-            <small class="help-text">Tell us something interesting about yourself.</small>
+            <span class="help-text">Tell us something interesting about yourself.</span>
             {{ form.bio }}
+            {{ form.bio.errors }}
         </div>
 
         <div class="form-field">
             <label for="id_interests">Interests</label>
-            <br>
-            <small class="help-text">What are your hobbies or interests?</small>
+            <span class="help-text">What activities light you up lately?</span>
             {{ form.interests }}
+            {{ form.interests.errors }}
         </div>
 
         <div class="form-field">
             <label for="id_drives">Drives</label>
-            <br>
-            <small class="help-text">Do you drive?</small>
+            <span class="help-text">Let us know if you have access to a vehicle.</span>
             {{ form.drives }}
+            {{ form.drives.errors }}
         </div>
 
-        <button type="submit">Save Changes</button>
+        <button type="submit">Save updates</button>
     </form>
-</div>
+</section>
 {% endblock %}
-
-<style>
-.form-field label {
-    font-weight: bold;
-    display: block;
-    margin-bottom: 2px;
-}
-
-.form-field .help-text {
-    font-size: 0.85em;
-    color: #555;
-    margin-bottom: 5px;
-    display: block;
-}
-
-input, select, textarea {
-    width: 100%;
-    padding: 8px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    font-size: 14px;
-}
-</style>

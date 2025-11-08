@@ -1,20 +1,33 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Login - MomentInMotion{% endblock %}
+{% block title %}Sign in · MomentInMotion{% endblock %}
 
 {% block content %}
-<div class="form-container">
-    <h2>Login</h2>
-    <form method="post" class="form-column">
+<section class="card form-card">
+    <h2>Welcome back</h2>
+    <p>Sign in to revisit your captured moments and get fresh ideas tailored to you.</p>
+
+    <form method="post" class="form-grid">
         {% csrf_token %}
-        <label>Username:</label>
-        {{ form.username }}
-        <label>Password:</label>
-        {{ form.password }}
-        <button type="submit">Login</button>
+        {% if form.non_field_errors %}
+            <div class="form-errors" role="alert">{{ form.non_field_errors }}</div>
+        {% endif %}
+
+        <div class="form-field">
+            <label for="{{ form.username.id_for_label }}">Username</label>
+            {{ form.username }}
+            {{ form.username.errors }}
+        </div>
+
+        <div class="form-field">
+            <label for="{{ form.password.id_for_label }}">Password</label>
+            {{ form.password }}
+            {{ form.password.errors }}
+        </div>
+
+        <button type="submit">Sign in</button>
     </form>
-    <div class="form-link">
-        Don't have an account? <a href="{% url 'signup' %}">Sign Up</a>
-    </div>
-</div>
+
+    <p class="muted-link">New to MomentInMotion? <a href="{% url 'signup' %}">Create an account</a></p>
+</section>
 {% endblock %}

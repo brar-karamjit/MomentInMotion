@@ -1,26 +1,94 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Home - MomentInMotion{% endblock %}
+{% block title %}Home · MomentInMotion{% endblock %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+{% endblock %}
 
 {% block content %}
-<div class="container">
-    <h2>Welcome, {{ user.first_name }}!</h2>
-    <p>Current weather: <span id="temperature">Not available</span></p>
+<section class="home-hero">
+    <div class="hero-tags">
+        <span class="hero-tag">✨ Personalized</span>
+        <span class="hero-tag">📍 Weather aware</span>
+        <span class="hero-tag">⚡ Real-time</span>
+    </div>
+    {% with user.first_name|default:"Explorer" as first_name %}
+    <h1>Hello, {{ first_name }}. Ready to make today memorable?</h1>
+    {% endwith %}
+    <p>MomentInMotion pairs live weather with your interests to spark quick, uplifting ideas you can act on in the next few minutes.</p>
+</section>
 
-    <form method="POST" class="suggestion-form">
-        {% csrf_token %}
-        <input type="hidden" name="lat" id="lat">
-        <input type="hidden" name="lon" id="lon">
-        <input type="hidden" name="temperature" id="temperature_input">
-        <input type="hidden" name="weathercode" id="weather_text_input">
-        <button type="submit" name="action" value="get_suggestion">Get Suggestion</button>
-    </form>
+<section class="home-grid">
+    <article class="card weather-card">
+        <div class="weather-header">
+            <span class="weather-title">Right now outdoors</span>
+            <span class="location-pill"><span aria-hidden="true">📍</span><span id="location-label">Locating…</span></span>
+        </div>
+        <div id="temperature">
+            <span class="loading">Pulling live conditions</span>
+        </div>
+        <div class="weather-stats">
+            <div class="weather-stat">
+                <span>Wind</span>
+                <span id="wind-speed">-- km/h</span>
+            </div>
+            <div class="weather-stat">
+                <span>Direction</span>
+                <span id="wind-direction">--</span>
+            </div>
+            <div class="weather-stat">
+                <span>Updated</span>
+                <span id="last-updated">--</span>
+            </div>
+            <div class="weather-stat">
+                <span>Weather code</span>
+                <span id="weather-code">--</span>
+            </div>
+        </div>
+    </article>
 
+    <article class="card moment-card">
+        <div class="card-header">
+            <div>
+                <h2 class="card-title">Capture your current vibe</h2>
+                <p class="card-subtitle">Add a quick note and we’ll tailor a suggestion to match the moment.</p>
+            </div>
+        </div>
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="lat" id="lat">
+            <input type="hidden" name="lon" id="lon">
+            <input type="hidden" name="temperature" id="temperature_input">
+            <input type="hidden" name="weathercode" id="weather_text_input">
+
+            <div class="form-field">
+                <label for="notes">What’s on your mind?</label>
+                <textarea id="notes" name="notes" placeholder="e.g. Warm sunset, craving something active" required>{{ request.POST.notes|default_if_none:"" }}</textarea>
+            </div>
+
+            <button type="submit" name="action" value="get_suggestion">Save moment &amp; get idea</button>
+        </form>
+    </article>
+</section>
+
+<article class="card suggestion-card">
+    <h3>Your personalized idea</h3>
     {% if suggestion_data %}
-        <h3>Suggestion activity:</h3>
-        <div class="suggestion">{{ suggestion_data.response|linebreaks }}</div>
+        <div class="suggestion-body fade-in">{{ suggestion_data.response|linebreaksbr }}</div>
+    {% else %}
+        <div class="empty-state">
+            <span aria-hidden="true">✨</span>
+            <div>
+                <strong>No suggestion yet.</strong>
+                <div>Share a quick note above to unlock a tailor-made activity for the current weather.</div>
+            </div>
+        </div>
     {% endif %}
-</div>
+</article>
+{% endblock %}
 
-<script src="{% static 'js/home.js' %}"></script>
+{% block extra_scripts %}
+    {{ block.super }}
+    <script src="{% static 'js/home.js' %}"></script>
 {% endblock %}
