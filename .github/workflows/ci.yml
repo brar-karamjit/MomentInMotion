@@ -13,7 +13,7 @@ env:
   # Your GitHub Username or Organization Name
   REGISTRY: ghcr.io
   # Replace with your actual username/org
-  GHCR_PATH: ${{ github.repository_owner }}/${{ env.IMAGE_NAME }} 
+  GHCR_PATH: ${{ github.repository_owner }}/momentinmotion 
 
 jobs:
   build-and-push:
